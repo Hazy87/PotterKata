@@ -39,6 +39,17 @@ public class PotterKataTests
         
         AssertExpectedCosts(expected);
     }
+    
+    [Fact]
+    public void TwoBooksCostGet5PercentDiscount()
+    {
+        var expected = 15.20;
+
+        _cart.AddBook(PotterBooks.First);
+        _cart.AddBook(PotterBooks.Second);
+        
+        AssertExpectedCosts(expected);
+    }
 
     private void AssertExpectedCosts(double expected)
     {
@@ -49,22 +60,36 @@ public class PotterKataTests
 
 public enum PotterBooks
 {
-    First
+    First,
+    Second
 }
 
 public class Cart
 {
-    private List<PotterBooks> _books = new();
-    
+    private Dictionary<PotterBooks, int> _books = new();
+    private const double SINGLE_BOOK_PRICE = 8.00;
+
     public double GetTotal()
     {
-        if (!_books.Any()) return 0;
+        var numberOfDistinctBooks = _books.Distinct().Count();
 
-        return _books.Count() * 8.00;
+        if (numberOfDistinctBooks == 2)
+        {
+            return (2 * SINGLE_BOOK_PRICE) * 0.95;
+        }
+        
+        return _books.Values.Sum() * SINGLE_BOOK_PRICE;
     }
 
     public void AddBook(PotterBooks book)
     {
-        _books.Add(book);
+        if (_books.ContainsKey(book))
+        {
+            _books[book] += 1;
+        }
+        else
+        {
+            _books.Add(book, 1);
+        }
     }
 }
