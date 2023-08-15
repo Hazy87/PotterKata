@@ -28,6 +28,17 @@ public class PotterKataTests
         
         AssertExpectedCosts(expected);
     }
+    
+    [Fact]
+    public void TwoDuplicateBooksCost16Pounds()
+    {
+        var expected = 16.00;
+
+        _cart.AddBook(PotterBooks.First);
+        _cart.AddBook(PotterBooks.First);
+        
+        AssertExpectedCosts(expected);
+    }
 
     private void AssertExpectedCosts(double expected)
     {
@@ -47,7 +58,9 @@ public class Cart
     
     public double GetTotal()
     {
-        return (_books.Count() == 1) ? 8.00 : 0;
+        if (!_books.Any()) return 0;
+
+        return _books.Count() * 8.00;
     }
 
     public void AddBook(PotterBooks book)
