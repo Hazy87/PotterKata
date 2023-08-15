@@ -68,17 +68,29 @@ public class Cart
 {
     private Dictionary<PotterBooks, int> _books = new();
     private const double SINGLE_BOOK_PRICE = 8.00;
-
+    private double _total = 0;
+    
     public double GetTotal()
     {
-        var numberOfDistinctBooks = _books.Distinct().Count();
+        var numberOfDistinctBooks = GetNumberOfDistinctBooks();
 
-        if (numberOfDistinctBooks == 2)
+        _total += numberOfDistinctBooks switch
         {
-            return (2 * SINGLE_BOOK_PRICE) * 0.95;
-        }
-        
-        return _books.Values.Sum() * SINGLE_BOOK_PRICE;
+            2 => (2 * SINGLE_BOOK_PRICE) * 0.95,
+            _ => GetNumberOfBooks() * SINGLE_BOOK_PRICE
+        };
+
+        return _total;
+    }
+
+    private int GetNumberOfBooks()
+    {
+        return _books.Values.Sum();
+    }
+
+    private int GetNumberOfDistinctBooks()
+    {
+        return _books.Distinct().Count();
     }
 
     public void AddBook(PotterBooks book)
