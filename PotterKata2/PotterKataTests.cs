@@ -157,6 +157,43 @@ public class PotterKataTests
         AssertExpectedCosts(expectedCost);
     }
     
+    [Fact]
+    public void FiveTimesDifferentBooksReceives25PercentDiscount()
+    {
+            
+        var expectedCost = 30.00;
+            
+        _cart.AddBook(PotterBooks.First);
+        _cart.AddBook(PotterBooks.Second);
+        _cart.AddBook(PotterBooks.Third);
+        _cart.AddBook(PotterBooks.Fourth);
+        _cart.AddBook(PotterBooks.Fifth);
+            
+        AssertExpectedCosts(expectedCost);
+    }
+        
+    [Fact]
+    public void ManyBooksCostCorrectPrice()
+    {
+
+        double expectedCost = 30.00 + 25.60 + 15.20 + 8.00;
+        
+        _cart.AddBook(PotterBooks.First);
+        _cart.AddBook(PotterBooks.First);
+        _cart.AddBook(PotterBooks.First);
+        _cart.AddBook(PotterBooks.Second);
+        _cart.AddBook(PotterBooks.Second);
+        _cart.AddBook(PotterBooks.Third);
+        _cart.AddBook(PotterBooks.Third);
+        _cart.AddBook(PotterBooks.Third);
+        _cart.AddBook(PotterBooks.Third);
+        _cart.AddBook(PotterBooks.Fourth);
+        _cart.AddBook(PotterBooks.Fourth);
+        _cart.AddBook(PotterBooks.Fifth);
+            
+        AssertExpectedCosts(expectedCost);
+    }
+    
     private void AssertExpectedCosts(double expected)
     {
         var actual = _cart.GetTotal();
@@ -169,7 +206,8 @@ public enum PotterBooks
     First,
     Second,
     Third,
-    Fourth
+    Fourth,
+    Fifth
 }
 
 public class Cart
@@ -205,6 +243,7 @@ public class Cart
     {
         total += numberOfDistinctBooks switch
         {
+            5 => (5 * SINGLE_BOOK_PRICE) * 0.75,
             4 => (4 * SINGLE_BOOK_PRICE) * 0.80,
             3 => (3 * SINGLE_BOOK_PRICE) * 0.90,
             2 => (2 * SINGLE_BOOK_PRICE) * 0.95,
