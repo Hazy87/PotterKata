@@ -50,6 +50,18 @@ public class PotterKataTests
         
         AssertExpectedCosts(expected);
     }
+    
+    [Fact]
+    public void ThreeBooksOneDuplicateCostGet5PercentDiscount()
+    {
+        var expected = 23.20;
+
+        _cart.AddBook(PotterBooks.First);
+        _cart.AddBook(PotterBooks.Second);
+        _cart.AddBook(PotterBooks.Second);
+        
+        AssertExpectedCosts(expected);
+    }
 
     private void AssertExpectedCosts(double expected)
     {
@@ -72,25 +84,57 @@ public class Cart
     
     public double GetTotal()
     {
-        var numberOfDistinctBooks = GetNumberOfDistinctBooks();
+        Dictionary<PotterBooks, int> remainingBooks = _books;
+        
 
-        _total += numberOfDistinctBooks switch
+        while (GetRemainingBookCount(remainingBooks) > 0)
         {
-            2 => (2 * SINGLE_BOOK_PRICE) * 0.95,
-            _ => GetNumberOfBooks() * SINGLE_BOOK_PRICE
-        };
+            var numberOfDistinctBooks = GetNumberOfDistinctBooks(remainingBooks);
+            
+            _total = CalculateDiscount(_total, numberOfDistinctBooks);
+
+            RemoveOneIssueOfEachBook(remainingBooks);
+        }
+        
 
         return _total;
     }
 
-    private int GetNumberOfBooks()
+    private static int GetRemainingBookCount(Dictionary<PotterBooks, int> remainingBooks)
     {
-        return _books.Values.Sum();
+        return remainingBooks.Values.Sum();
     }
 
-    private int GetNumberOfDistinctBooks()
+    private double CalculateDiscount(double total, int numberOfDistinctBooks)
     {
-        return _books.Distinct().Count();
+        total += numberOfDistinctBooks switch
+        {
+            2 => (2 * SINGLE_BOOK_PRICE) * 0.95,
+            _ => SINGLE_BOOK_PRICE
+        };
+
+        return total;
+    }
+
+    private static void RemoveOneIssueOfEachBook(Dictionary<PotterBooks, int> remainingBooks)
+    {
+        foreach (var book in remainingBooks)
+        {
+            var value = book.Value;
+            if (value == 1)
+            {
+                remainingBooks.Remove(book.Key);
+            }
+            else
+            {
+                remainingBooks[book.Key] -= 1;
+            }
+        }
+    }
+
+    private int GetNumberOfDistinctBooks(Dictionary<PotterBooks, int> books)
+    {
+        return books.Distinct().Count();
     }
 
     public void AddBook(PotterBooks book)
