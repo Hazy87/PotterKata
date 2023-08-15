@@ -142,6 +142,21 @@ public class PotterKataTests
         AssertExpectedCosts(expectedCost);
     }
     
+    [Fact]
+    public void SixBooksTwoDuplicatedReceives20PercentDiscountOnFourBooksAnd5PercentOnTwoBooks()
+    {
+        var expectedCost = 40.80;
+        
+        _cart.AddBook(PotterBooks.First);
+        _cart.AddBook(PotterBooks.Second);
+        _cart.AddBook(PotterBooks.Third);
+        _cart.AddBook(PotterBooks.Fourth);
+        _cart.AddBook(PotterBooks.Third);
+        _cart.AddBook(PotterBooks.Fourth);
+            
+        AssertExpectedCosts(expectedCost);
+    }
+    
     private void AssertExpectedCosts(double expected)
     {
         var actual = _cart.GetTotal();
