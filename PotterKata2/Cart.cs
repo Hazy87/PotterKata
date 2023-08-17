@@ -8,19 +8,15 @@ public class Cart
     
     public double GetTotal()
     {
-        Dictionary<PotterBooks, int> remainingBooks = _books;
+        var remainingBooks = _books;
         
-
         while (GetRemainingBookCount(remainingBooks) > 0)
         {
             var numberOfDistinctBooks = GetNumberOfDistinctBooks(remainingBooks);
             
-            _total = CalculateDiscount(_total, numberOfDistinctBooks);
-
+            _total += (numberOfDistinctBooks * GetDiscountAmount(numberOfDistinctBooks)) * SINGLE_BOOK_PRICE;
             RemoveOneIssueOfEachBook(remainingBooks);
         }
-        
-
         return _total;
     }
 
@@ -29,20 +25,18 @@ public class Cart
         return remainingBooks.Values.Sum();
     }
 
-    private double CalculateDiscount(double total, int numberOfDistinctBooks)
+    private double GetDiscountAmount(int numberOfDistinctBooks)
     {
-        total += numberOfDistinctBooks switch
+        return numberOfDistinctBooks switch
         {
-            5 => (5 * SINGLE_BOOK_PRICE) * 0.75,
-            4 => (4 * SINGLE_BOOK_PRICE) * 0.80,
-            3 => (3 * SINGLE_BOOK_PRICE) * 0.90,
-            2 => (2 * SINGLE_BOOK_PRICE) * 0.95,
-            _ => SINGLE_BOOK_PRICE
+            5 => 0.75,
+            4 => 0.80,
+            3 => 0.90,
+            2 => 0.95,
+            _ => 1
         };
-
-        return total;
     }
-
+    
     private static void RemoveOneIssueOfEachBook(Dictionary<PotterBooks, int> remainingBooks)
     {
         foreach (var book in remainingBooks)
