@@ -4,157 +4,170 @@ namespace PotterKata2;
 
 public class PotterKataTests
 {
-    private static Cart _cart;
-    
-    public PotterKataTests()
-    {
-        _cart = new Cart();
-    }
     
     [Fact]
     public void NoBooksCostZero()
     {
         var expected = 0;
 
-        AssertExpectedCosts(expected);
+        AssertExpectedCosts(expected, new List<PotterBooks>());
     }
     
     [Fact]
     public void OneBooksCost8Pounds()
     {
         var expected = 8.00;
+        var cart = new List<PotterBooks> { PotterBooks.First };
 
-        _cart.AddBook(PotterBooks.First);
-        
-        AssertExpectedCosts(expected);
+        AssertExpectedCosts(expected, cart);
     }
     
     [Fact]
     public void TwoDuplicateBooksCost16Pounds()
     {
         var expected = 16.00;
+        var cart = new List<PotterBooks>
+        {
+            PotterBooks.First,
+            PotterBooks.First
+        };
 
-        _cart.AddBook(PotterBooks.First);
-        _cart.AddBook(PotterBooks.First);
-        
-        AssertExpectedCosts(expected);
+        AssertExpectedCosts(expected, cart);
     }
     
     [Fact]
     public void TwoBooksCostGet5PercentDiscount()
     {
         var expected = 15.20;
+        var cart = new List<PotterBooks>
+        {
+            PotterBooks.First,
+            PotterBooks.Second
+        };
 
-        _cart.AddBook(PotterBooks.First);
-        _cart.AddBook(PotterBooks.Second);
-        
-        AssertExpectedCosts(expected);
+        AssertExpectedCosts(expected, cart);
     }
     
     [Fact]
     public void ThreeBooksOneDuplicateCostGet5PercentDiscount()
     {
         var expected = 23.20;
+        var cart = new List<PotterBooks>
+        {
+            PotterBooks.First,
+            PotterBooks.Second,
+            PotterBooks.Second
+        };
 
-        _cart.AddBook(PotterBooks.First);
-        _cart.AddBook(PotterBooks.Second);
-        _cart.AddBook(PotterBooks.Second);
-        
-        AssertExpectedCosts(expected);
+        AssertExpectedCosts(expected, cart);
     }
     
     [Fact]
     public void FourBooksTwoDuplicateCostGet5PercentDiscount()
     {
         var expected = 30.40;
+        var cart = new List<PotterBooks>
+        {
+            PotterBooks.First,
+            PotterBooks.Second,
+            PotterBooks.First,
+            PotterBooks.Second
+        };
 
-        _cart.AddBook(PotterBooks.First);
-        _cart.AddBook(PotterBooks.Second);
-        _cart.AddBook(PotterBooks.First);
-        _cart.AddBook(PotterBooks.Second);
-        
-        AssertExpectedCosts(expected);
+        AssertExpectedCosts(expected, cart);
     }
     
     [Fact]
     public void ThreeDifferentBooksGets10PercentDiscount()
     {
         var expected = 21.60;
+        var cart = new List<PotterBooks>
+        {
+            PotterBooks.First,
+            PotterBooks.Second,
+            PotterBooks.Third
+        };
 
-        _cart.AddBook(PotterBooks.First);
-        _cart.AddBook(PotterBooks.Second);
-        _cart.AddBook(PotterBooks.Third);
-        
-        AssertExpectedCosts(expected);
+        AssertExpectedCosts(expected, cart);
     }
     
     [Fact]
     public void FourBooksOneDuplicateBookGets10PercentDiscount()
     {
         var expected = 29.60;
+        var cart = new List<PotterBooks>
+        {
+            PotterBooks.First,
+            PotterBooks.Second,
+            PotterBooks.Third,
+            PotterBooks.Second
+        };
 
-        _cart.AddBook(PotterBooks.First);
-        _cart.AddBook(PotterBooks.Second);
-        _cart.AddBook(PotterBooks.Third);
-        _cart.AddBook(PotterBooks.Second);
-        
-        AssertExpectedCosts(expected);
+        AssertExpectedCosts(expected, cart);
     }
     
     [Fact]
     public void FourBookGets20PercentDiscount()
     {
         var expected = 25.60;
+        var cart = new List<PotterBooks>
+        {
+            PotterBooks.First,
+            PotterBooks.Second,
+            PotterBooks.Third,
+            PotterBooks.Fourth
+        };
 
-        _cart.AddBook(PotterBooks.First);
-        _cart.AddBook(PotterBooks.Second);
-        _cart.AddBook(PotterBooks.Third);
-        _cart.AddBook(PotterBooks.Fourth);
-        
-        AssertExpectedCosts(expected);
+        AssertExpectedCosts(expected, cart);
     }
 
     [Fact]
     public void FiveBooksWithTwoDuplicateGets10PercentDiscountOn3BooksAnd5PercentOn2Books()
     {
         var expected = 21.60 + 15.20;
+        var cart = new List<PotterBooks>
+        {
+            PotterBooks.First,
+            PotterBooks.Second,
+            PotterBooks.Third,
+            PotterBooks.Third,
+            PotterBooks.Second
+        };
 
-        _cart.AddBook(PotterBooks.First);
-        _cart.AddBook(PotterBooks.Second);
-        _cart.AddBook(PotterBooks.Third);
-        _cart.AddBook(PotterBooks.Third);
-        _cart.AddBook(PotterBooks.Second);
-        
-        AssertExpectedCosts(expected);
+        AssertExpectedCosts(expected, cart);
     }
     
     [Fact]
     public void FiveBooksOneDuplicatedReceives20PercentDiscount()
     {
         var expectedCost = 33.60;
-        
-        _cart.AddBook(PotterBooks.First);
-        _cart.AddBook(PotterBooks.Second);
-        _cart.AddBook(PotterBooks.Third);
-        _cart.AddBook(PotterBooks.Third);
-        _cart.AddBook(PotterBooks.Fourth);
-            
-        AssertExpectedCosts(expectedCost);
+        var cart = new List<PotterBooks>
+        {
+            PotterBooks.First,
+            PotterBooks.Second,
+            PotterBooks.Third,
+            PotterBooks.Third,
+            PotterBooks.Fourth
+        };
+
+        AssertExpectedCosts(expectedCost, cart);
     }
     
     [Fact]
     public void SixBooksTwoDuplicatedReceives20PercentDiscountOnFourBooksAnd5PercentOnTwoBooks()
     {
         var expectedCost = 40.80;
-        
-        _cart.AddBook(PotterBooks.First);
-        _cart.AddBook(PotterBooks.Second);
-        _cart.AddBook(PotterBooks.Third);
-        _cart.AddBook(PotterBooks.Fourth);
-        _cart.AddBook(PotterBooks.Third);
-        _cart.AddBook(PotterBooks.Fourth);
-            
-        AssertExpectedCosts(expectedCost);
+        var cart = new List<PotterBooks>
+        {
+            PotterBooks.First,
+            PotterBooks.Second,
+            PotterBooks.Third,
+            PotterBooks.Fourth,
+            PotterBooks.Third,
+            PotterBooks.Fourth
+        };
+
+        AssertExpectedCosts(expectedCost, cart);
     }
     
     [Fact]
@@ -162,14 +175,16 @@ public class PotterKataTests
     {
             
         var expectedCost = 30.00;
-            
-        _cart.AddBook(PotterBooks.First);
-        _cart.AddBook(PotterBooks.Second);
-        _cart.AddBook(PotterBooks.Third);
-        _cart.AddBook(PotterBooks.Fourth);
-        _cart.AddBook(PotterBooks.Fifth);
-            
-        AssertExpectedCosts(expectedCost);
+        var cart = new List<PotterBooks>
+        {
+            PotterBooks.First,
+            PotterBooks.Second,
+            PotterBooks.Third,
+            PotterBooks.Fourth,
+            PotterBooks.Fifth
+        };
+
+        AssertExpectedCosts(expectedCost, cart);
     }
         
     [Fact]
@@ -177,26 +192,28 @@ public class PotterKataTests
     {
 
         double expectedCost = 30.00 + 25.60 + 15.20 + 8.00;
-        
-        _cart.AddBook(PotterBooks.First);
-        _cart.AddBook(PotterBooks.First);
-        _cart.AddBook(PotterBooks.First);
-        _cart.AddBook(PotterBooks.Second);
-        _cart.AddBook(PotterBooks.Second);
-        _cart.AddBook(PotterBooks.Third);
-        _cart.AddBook(PotterBooks.Third);
-        _cart.AddBook(PotterBooks.Third);
-        _cart.AddBook(PotterBooks.Third);
-        _cart.AddBook(PotterBooks.Fourth);
-        _cart.AddBook(PotterBooks.Fourth);
-        _cart.AddBook(PotterBooks.Fifth);
-            
-        AssertExpectedCosts(expectedCost);
+        var cart = new List<PotterBooks>
+        {
+            PotterBooks.First,
+            PotterBooks.First,
+            PotterBooks.First,
+            PotterBooks.Second,
+            PotterBooks.Second,
+            PotterBooks.Third,
+            PotterBooks.Third,
+            PotterBooks.Third,
+            PotterBooks.Third,
+            PotterBooks.Fourth,
+            PotterBooks.Fourth,
+            PotterBooks.Fifth
+        };
+
+        AssertExpectedCosts(expectedCost, cart);
     }
     
-    private void AssertExpectedCosts(double expected)
+    private void AssertExpectedCosts(double expected, List<PotterBooks> books)
     {
-        var actual = _cart.GetTotal();
+        var actual = new Cart().GetTotal(books);
         Assert.Equal(expected, actual);
     }
 }

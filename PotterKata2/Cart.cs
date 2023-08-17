@@ -2,27 +2,19 @@ namespace PotterKata2;
 
 public class Cart
 {
-    private Dictionary<PotterBooks, int> _books = new();
     private const double SINGLE_BOOK_PRICE = 8.00;
-    private double _total = 0;
-    
-    public double GetTotal()
-    {
-        var remainingBooks = _books;
-        
-        while (GetRemainingBookCount(remainingBooks) > 0)
-        {
-            var numberOfDistinctBooks = GetNumberOfDistinctBooks(remainingBooks);
-            
-            _total += (numberOfDistinctBooks * GetDiscountAmount(numberOfDistinctBooks)) * SINGLE_BOOK_PRICE;
-            RemoveOneIssueOfEachBook(remainingBooks);
-        }
-        return _total;
-    }
 
-    private static int GetRemainingBookCount(Dictionary<PotterBooks, int> remainingBooks)
+    public double GetTotal(List<PotterBooks> books)
     {
-        return remainingBooks.Values.Sum();
+        var total = 0.0;
+        while (books.Count> 0)
+        {
+            var numberOfDistinctBooks = GetNumberOfDistinctBooks(books);
+            total += numberOfDistinctBooks * GetDiscountAmount(numberOfDistinctBooks) * SINGLE_BOOK_PRICE;
+            RemoveOneIssueOfEachBook(books);
+        }
+
+        return total;
     }
 
     private double GetDiscountAmount(int numberOfDistinctBooks)
@@ -36,37 +28,14 @@ public class Cart
             _ => 1
         };
     }
-    
-    private static void RemoveOneIssueOfEachBook(Dictionary<PotterBooks, int> remainingBooks)
+
+    private void RemoveOneIssueOfEachBook(List<PotterBooks> remainingBooks)
     {
-        foreach (var book in remainingBooks)
-        {
-            var value = book.Value;
-            if (value == 1)
-            {
-                remainingBooks.Remove(book.Key);
-            }
-            else
-            {
-                remainingBooks[book.Key] -= 1;
-            }
-        }
+        remainingBooks.GroupBy(x => x).ToList().ForEach(x => remainingBooks.Remove(x.First()));
     }
 
-    private int GetNumberOfDistinctBooks(Dictionary<PotterBooks, int> books)
+    private int GetNumberOfDistinctBooks(IEnumerable<PotterBooks> books)
     {
         return books.Distinct().Count();
-    }
-
-    public void AddBook(PotterBooks book)
-    {
-        if (_books.ContainsKey(book))
-        {
-            _books[book] += 1;
-        }
-        else
-        {
-            _books.Add(book, 1);
-        }
     }
 }
